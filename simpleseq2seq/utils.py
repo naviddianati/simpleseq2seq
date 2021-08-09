@@ -9,10 +9,9 @@ from nltk.tokenize import RegexpTokenizer
 
 
 class Seq2SeqDataParser:
-    """Given a generator that yields one pair fo sequences at a time,
-    parse the sequences and transform them into a format directly 
-    usable by a seq2seq model.
-    """
+    """Parse one input/output pair of sequences at a time 
+    and transform them into a format directly usable by a 
+    seq2seq model."""
 
     def __init__(self, tokenizer, start_token="\t", end_token="\n"):
         self.start_token = start_token
@@ -44,8 +43,6 @@ class Seq2SeqDataParser:
         input_s = input_s.strip().lower()
         output_s = output_s.strip().lower()
         
-        # Add start sequence and end sequence tokens
-#         output_s = "\t" + output_s + "\n"
         # Tokenize and update tokens
         for token in self.tokenizer.tokenize(input_s):
             self.input_tokens.add(token)
@@ -74,7 +71,7 @@ class Seq2SeqDataParser:
         self.max_input_length = max([len(x) for x in self.input_texts])
         self.max_output_length = max([len(x) for x in self.output_texts])
         
-        # To include the start sequence and end sequence tokens
+        # To include the start sequence and end sequence tokens, add 2
         self.max_output_length += 2
         
         print(str(self))
@@ -98,6 +95,8 @@ class Seq2SeqDataParser:
 
         for i, (input_text, output_text) in enumerate(zip(self.input_texts, self.output_texts)):
             input_tokens = self.tokenizer.tokenize(input_text)
+
+            # Add start sequence and end sequence tokens
             output_tokens = [self.start_token] + self.tokenizer.tokenize(output_text) + [self.end_token]
             
             for t, token in enumerate(input_tokens):
